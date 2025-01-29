@@ -19,13 +19,13 @@ return new class extends Migration
             $table->string('image_url', 255)->nullable();
             $table->decimal('weight', 8, 2)->nullable();
             $table->json('additional')->nullable();
-            $table->string('status', 50)->default('available');
+            $table->string('status', 50)->nullable();
             $table->decimal('rating', 3, 2)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
     }
-    
+
     public function down(): void
     {
         Schema::dropIfExists('products');
