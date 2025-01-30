@@ -38,7 +38,6 @@ class SuppliersController extends Controller
  
 
         $validatedData = $validator->validated();
-
         $supplier = Suppliers::create($validatedData);
     
         return response()->json($supplier, 201);
