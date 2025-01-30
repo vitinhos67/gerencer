@@ -22,12 +22,12 @@ class Products extends Model
         'price',
         'stock_quantity',
         'sku',
-        'category_id',
         'image_url',
         'weight',
         'additional',
         'status',
-        'rating'
+        'rating',
+        'supplier_id'
     ];
 
 

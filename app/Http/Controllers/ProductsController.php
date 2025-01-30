@@ -23,6 +23,7 @@ class ProductsController extends Controller
                 'additional'     => 'nullable|array',
                 'status'         => 'nullable|string|max:50|in:active,inactive,draft',
                 'rating'         => 'nullable|numeric|min:0|max:5',
+                'supplier_id'    => 'required|integer'
             ]);
         
             if ($validator->fails()) {
@@ -39,11 +40,10 @@ class ProductsController extends Controller
         } catch(\Exception $e) {
             return response()->json($e->getMessage(), 500);
         }
-
     }
 
     public function get(Request $request)
     {
-        return [];
+        return response()->json(Products::get(), 201);
     }
 }
