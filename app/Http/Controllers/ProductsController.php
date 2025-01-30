@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Products;
+use App\Models\Suppliers;
 use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
@@ -34,6 +35,13 @@ class ProductsController extends Controller
      
             $validatedData = $validator->validated();
             $validatedData['additional'] = json_encode($validatedData['additional']);
+
+            if(!Suppliers::find($validatedData['supplier_id'])) {
+                return response()->json([
+                    'errors' => ['invalid-supplier'],
+                ], 422);
+            }
+
             $product = Products::create($validatedData);
     
             return response()->json($product, 201);
