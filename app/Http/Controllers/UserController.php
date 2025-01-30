@@ -26,6 +26,9 @@ class UserController extends Controller
         $user = new User($validatedData);
         $user->save();
 
-        return response()->json($user, 201);
+        $success['token'] =  $user->createToken('user')->plainTextToken;
+        $success['name'] =  $user->name;
+
+        return response()->json($success, 201);
     }
 }
