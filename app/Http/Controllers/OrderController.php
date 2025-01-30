@@ -37,7 +37,6 @@ class OrderController extends Controller
         }
         $validatedData = $validator->validated();
         $service = new OrderService;
-
         $order = $service->create($validatedData);
 
         return response()->json($order, 201);

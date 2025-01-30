@@ -2,7 +2,6 @@
 
 namespace App\Services\Order;
 
-use App\Models\OrderProducts;
 use App\Models\Orders\Order;
 use App\Services\User\UserAddressService;
 
@@ -16,16 +15,22 @@ class OrderService
             $data['user_address_id'] = $address->id;
         }
 
+        $order = $this->saveOrder($data);
+
+        $orderProducts = new OrderProductsService();
+        $orderProducts->create($data['products'], $order->id);
+
+        return $order;
+    }
+
+    private function saveOrder($data)
+    {
         $order = new Order();
         $order->user_id = $data['user_id'];
         $order->user_address_id = $data['user_address_id'];
         $order->status = $data['status'];
         $order->delivery_type = $data['delivery_type'];
         $order->save();
-        
-        $orderProducts = new OrderProductsService();
-        $orderProducts->create($data['products'], $order->id);
-
         return $order;
     }
 }

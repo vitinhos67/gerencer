@@ -8,14 +8,6 @@ use Illuminate\Support\Facades\Validator;
 
 class SuppliersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -35,11 +27,10 @@ class SuppliersController extends Controller
                 'errors' => $validator->errors(),
             ], 422);
         }
- 
 
         $validatedData = $validator->validated();
         $supplier = Suppliers::create($validatedData);
-    
+
         return response()->json($supplier, 201);
     }
 }
