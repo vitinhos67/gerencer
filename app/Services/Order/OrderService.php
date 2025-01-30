@@ -28,7 +28,7 @@ class OrderService
         $order = new Order();
         $order->user_id = $data['user_id'];
         $order->user_address_id = $data['user_address_id'];
-        $order->status = $data['status'];
+        $order->status_id = $data['status_id'];
         $order->delivery_type = $data['delivery_type'];
         $order->save();
         return $order;

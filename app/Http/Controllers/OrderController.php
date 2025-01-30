@@ -14,8 +14,8 @@ class OrderController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|integer|exists:users,id',
             'user_address_id' => 'nullable|integer|exists:user_addresses,id',
-            'delivery_type' => 'required|string|max:255',
-            'status' => 'required|string|min:8',
+            'delivery_type' => 'required|string|max:255|in:pickup,delivery',
+            'status_id' => 'required|integer|exists:order_statuses,id',
             'products' => 'required|array',
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
