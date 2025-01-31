@@ -9,12 +9,6 @@ class Products extends Model
 {
     use SoftDeletes;
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
-    ];
-
     protected $fillable = [
         'id',
         'name',
@@ -27,8 +21,16 @@ class Products extends Model
         'additional',
         'status',
         'rating',
-        'supplier_id'
+        'supplier_id',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
+    }
 
 }

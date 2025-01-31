@@ -17,10 +17,13 @@ class OrderProducts extends Model
         'product_id'
     ];
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
-    ];
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime', 
+            'updated_at' => 'datetime', 
+            'deleted_at' => 'datetime',
+        ];
+    }
 
 }

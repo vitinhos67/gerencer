@@ -24,7 +24,12 @@ class Suppliers extends Model
         'country',
     ];
 
-    protected $casts = [
-        'deleted_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+        ];
+    }
 }
