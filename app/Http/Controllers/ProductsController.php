@@ -13,6 +13,7 @@ class ProductsController extends Controller
     public function create(Request $request)
     {   
         try {
+
             $validator = Validator::make($request->all(), [
                 'name'           => 'required|string|max:255',
                 'description'    => 'nullable|string',

@@ -12,7 +12,6 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer|exists:users,id',
             'user_address_id' => 'nullable|integer|exists:user_addresses,id',
             'delivery_type' => 'required|string|max:255|in:pickup,delivery',
             'status_id' => 'required|integer|exists:order_statuses,id',
@@ -37,7 +36,7 @@ class OrderController extends Controller
         }
         $validatedData = $validator->validated();
         $service = new OrderService;
-        $order = $service->create($validatedData);
+        $order = $service->create($validatedData, $request->user());
 
         return response()->json($order, 201);
 

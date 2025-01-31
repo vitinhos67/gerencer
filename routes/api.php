@@ -13,6 +13,10 @@ Route::post('/user', [UserController::class, 'create']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::prefix('order')->group(function () {
+        Route::post('/', [OrderController::class, 'create']);
+    });
+
     Route::get('/user', [UserController::class, 'get']);
 
     Route::prefix('products')->group(function () {
@@ -22,9 +26,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('supplier')->group(function () {
         Route::post('/', [SuppliersController::class, 'create']);
-    });
-
-    Route::prefix('order')->group(function () {
-        Route::post('/', [OrderController::class, 'create']);
     });
 });
