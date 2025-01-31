@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSuppliersRequest;
 use App\Http\Requests\StoreWorkingHoursRequest;
 use App\Models\Suppliers\SupplierConfig;
 use App\Models\Suppliers\Suppliers;
@@ -9,37 +10,13 @@ use App\Models\Suppliers\UserSupplier;
 use App\Models\Suppliers\WorkingHours;
 use App\Models\User\User;
 use DateTime;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
-
 class SuppliersController extends Controller
 {
-    public function create(Request $request)
+    public function create(StoreSuppliersRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'contact_name' => 'nullable|string|max:255',
-            'email' => 'required|email|unique:suppliers,email',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'postal_code' => 'nullable|string|max:20',
-            'country' => 'nullable|string|max:255',
-            'user' => 'required|array',
-            'user.email' => 'required|string|email|max:255',
-            'user.name' => 'required|string|max:255',
-            'user.password' => 'required|string|max:255',
-        ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        $validatedData = $validator->validated();
+        $validatedData = $request->validated();
         $supplier = Suppliers::create($validatedData);
 
         $supplier->token = $this->createAdmin($validatedData['user'], $supplier->id);
