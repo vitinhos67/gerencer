@@ -37,7 +37,6 @@ class SuppliersController extends Controller
         $supplier = Suppliers::create($validatedData);
 
         $supplier->token  = $this->createAdmin($validatedData['user']);
-
         return response()->json($supplier, 201);
     }
 
