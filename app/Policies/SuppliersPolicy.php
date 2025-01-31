@@ -2,9 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\Suppliers;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\Suppliers\Suppliers;
+use App\Models\User\User;
 
 class SuppliersPolicy
 {

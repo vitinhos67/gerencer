@@ -3,7 +3,7 @@
 namespace App\Services\Order;
 
 use App\Models\Orders\Order;
-use App\Models\User;
+use App\Models\User\User;
 use App\Services\User\UserAddressService;
 
 class OrderService
