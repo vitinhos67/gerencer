@@ -13,6 +13,20 @@ Route::post('/register', [UserController::class, 'createUser'])->withoutMiddlewa
 Route::post('/supplier', [SuppliersController::class, 'create'])->withoutMiddleware('auth:sanctum');
 
 Route::middleware(['role:moderador|admin'])->group(function () {
+
+
+    Route::prefix('supplier')->group(function () {
+        Route::get('/', [SuppliersController::class, 'get']);
+        Route::get('/journey', [SuppliersController::class, 'get']);
+        
+
+        Route::prefix('config')->group(function() {
+            Route::post('/', [SuppliersController::class, 'createConfig']);
+        });
+
+    });
+
+    
     Route::prefix('products')->group(function () {
         Route::post('/', [ProductsController::class, 'create']);
         Route::get('/', [ProductsController::class, 'get']);
