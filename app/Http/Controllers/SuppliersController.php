@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreWorkingHoursRequest;
-use App\Models\SupplierConfig;
-use App\Models\Suppliers;
+use App\Models\Suppliers\SupplierConfig;
+use App\Models\Suppliers\Suppliers;
+use App\Models\Suppliers\UserSupplier;
+use App\Models\Suppliers\WorkingHours;
 use App\Models\User;
-use App\Models\UserSupplier;
-use App\Models\WorkingHours;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -69,7 +69,6 @@ class SuppliersController extends Controller
             $userConfig->save();
 
             foreach ($validatedData['working_hours'] as $day) {
-
                 $opening_time = new DateTime($day['opening_time']);
                 $formatted_opening_time = $opening_time->format('H:i:s');
 

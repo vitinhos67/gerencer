@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Services\User;
-
-use App\Models\UserAddress;
+use App\Models\User\UserAddress;
 
 class UserAddressService
 {

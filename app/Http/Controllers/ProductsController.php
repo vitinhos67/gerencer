@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Products;
-use App\Models\Suppliers;
+use App\Models\Suppliers\Suppliers;
 use Illuminate\Support\Facades\Validator;
 
 class ProductsController extends Controller
@@ -44,7 +44,6 @@ class ProductsController extends Controller
             }
 
             $product = Products::create($validatedData);
-    
             return response()->json($product, 201);
         } catch(\Exception $e) {
             return response()->json($e->getMessage(), 500);
@@ -53,6 +52,6 @@ class ProductsController extends Controller
 
     public function get(Request $request)
     {
-        return response()->json(Products::get(), 201);
+        return response()->json(Products::get(), 200);
     }
 }
