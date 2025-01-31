@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Suppliers\UserSupplier;
-use Illuminate\Foundation\Auth\User;
+use App\Models\User\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,7 +28,7 @@ class UserController extends Controller
         $user = new User($validatedData);
         $user->save();
 
-        $user->assignRole('moderator');
+        $user->assignRole('moderador');
         
         UserSupplier::create([
             'user_id' => $user->id,
