@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->prependToGroup('api', [
+            'auth:sanctum',
             ForceJsonResponse::class,
         ]);
 

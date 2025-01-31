@@ -8,28 +8,29 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Rotas públicas
-Route::post('/auth/token', [AuthController::class, 'generateToken']);
-Route::post('/user', [UserController::class, 'create']);
+Route::post('/auth/token', [AuthController::class, 'generateToken'])->withoutMiddleware('auth:sanctum');
+Route::post('/register', [UserController::class, 'create'])->withoutMiddleware('auth:sanctum');
 
-Route::middleware('auth:sanctum')->group(function () {
-
-    Route::middleware('role:moderador|admin')->group(function () {
-        Route::prefix('products')->group(function () {
-            Route::post('/', [ProductsController::class, 'create']);
-            Route::get('/', [ProductsController::class, 'get']);
-        });
-
-        Route::prefix('supplier')->group(function () {
-            Route::post('/', [SuppliersController::class, 'create']);
-        });
+Route::middleware(['role:moderador|admin'])->group(function () {
+    Route::prefix('products')->group(function () {
+        Route::post('/', [ProductsController::class, 'create']);
+        Route::get('/', [ProductsController::class, 'get']);
     });
 
-    Route::get('/user', [UserController::class, 'get']);
-
-    Route::middleware('role:admin,moderador,user')->group(function () {
+    Route::prefix('user')->group(function () {
         Route::get('/user', [UserController::class, 'get']);
-        Route::prefix('order')->group(function () {
-            Route::post('/', [OrderController::class, 'create']);
-        });
+        Route::post('/', [UserController::class, 'create']);
+    });
+
+    Route::prefix('supplier')->group(function () {
+        Route::post('/', [SuppliersController::class, 'create']);
+    });
+});
+
+
+Route::middleware(['role:moderador|admin'])->group(function () {
+    Route::get('/user', [UserController::class, 'get']);
+    Route::prefix('order')->group(function () {
+        Route::post('/', [OrderController::class, 'create']);
     });
 });
