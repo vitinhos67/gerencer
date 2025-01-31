@@ -13,18 +13,23 @@ Route::post('/user', [UserController::class, 'create']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::prefix('order')->group(function () {
-        Route::post('/', [OrderController::class, 'create']);
+    Route::middleware('role:moderador|admin')->group(function () {
+        Route::prefix('products')->group(function () {
+            Route::post('/', [ProductsController::class, 'create']);
+            Route::get('/', [ProductsController::class, 'get']);
+        });
+
+        Route::prefix('supplier')->group(function () {
+            Route::post('/', [SuppliersController::class, 'create']);
+        });
     });
 
     Route::get('/user', [UserController::class, 'get']);
 
-    Route::prefix('products')->group(function () {
-        Route::post('/', [ProductsController::class, 'create']);
-        Route::get('/', [ProductsController::class, 'get']);
-    });
-
-    Route::prefix('supplier')->group(function () {
-        Route::post('/', [SuppliersController::class, 'create']);
+    Route::middleware('role:admin,moderador,user')->group(function () {
+        Route::get('/user', [UserController::class, 'get']);
+        Route::prefix('order')->group(function () {
+            Route::post('/', [OrderController::class, 'create']);
+        });
     });
 });
