@@ -2,6 +2,7 @@
 
 namespace App\Models\Orders;
 
+use App\Models\Products;
 use App\Models\User\User;
 use App\Models\User\UserAddress;
 use Illuminate\Database\Eloquent\Model;
@@ -12,20 +13,15 @@ class Order extends Model
 
     use SoftDeletes;
 
-    protected $fillable = ['user_id', 'user_address_id', 'status', 'delivery_type'];
+    protected $fillable = ['user_id', 'user_address_id', 'status', 'delivery_type', 'payment_method_id', 'paid'];
 
     protected function casts(): array
     {
         return [
-            'created_at' => 'datetime', 
-            'updated_at' => 'datetime', 
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function address()
@@ -33,8 +29,14 @@ class Order extends Model
         return $this->belongsTo(UserAddress::class, 'user_address_id');
     }
 
-    public function products()
+    public function ScopeGetUser($query)
     {
-        return $this->belongsToMany(OrderProducts::class, 'order_product');
+        return $query->leftJoin('users as u', 'u.id', 'orders.user_id');
     }
+
+    public function ScopeGetPaymentMethod($query) 
+    {
+        return $query->leftJoin('payment_methods as pm', 'orders.payment_method_id', 'pm.id');
+    }
+
 }

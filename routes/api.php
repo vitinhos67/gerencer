@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\UserController;
@@ -36,5 +37,6 @@ Route::middleware(['role:moderador|admin'])->group(function () {
 Route::middleware(['role:user|moderador|admin'])->group(function () {
     Route::prefix('order')->group(function () {
         Route::post('/', [OrderController::class, 'create']);
+        Route::post('/payment', [PaymentController::class, 'make']);
     });
 });

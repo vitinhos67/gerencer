@@ -25,11 +25,10 @@ class OrderService
 
     private function saveOrder($data, $user)
     {
-        $order = new Order();
+        $order = new Order($data);
         $order->user_id = $user->id;
-        $order->user_address_id = $data['user_address_id'];
         $order->status_id = $data['status_id'];
-        $order->delivery_type = $data['delivery_type'];
+
         $order->save();
         return $order;
     }

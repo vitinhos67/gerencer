@@ -30,6 +30,7 @@ class CreateOrderRequest extends FormRequest
             'address.city' => 'required_with:address|string',
             'address.state' => 'required_with:address|string',
             'address.zip_code' => 'required_with:address|string',
+            'payment_method_id' => 'required|integer|exists:payment_methods,id'
         ];
     }
 }

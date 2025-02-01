@@ -1,20 +1,24 @@
 <?php
 
-namespace App\Models\Orders;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class OrderProducts extends Model
+class PaymentMethods extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = "order_product";
+
+    protected $table = "payment_methods";
 
     protected $fillable = [
-        'order_id',
-        'product_id'
+        'name',
+        'code',
+        'active',
+        'icon',
+        'fee'
     ];
 
     protected function casts(): array
@@ -24,11 +28,6 @@ class OrderProducts extends Model
             'updated_at' => 'datetime', 
             'deleted_at' => 'datetime',
         ];
-    }
-
-    public function ScopeGetProducts($query) 
-    {
-        return $query->leftJoin("products as p", 'p.id', 'order_product.product_id');
     }
 
 }
