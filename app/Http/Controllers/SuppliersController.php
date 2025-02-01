@@ -8,7 +8,7 @@ use App\Models\Suppliers\SupplierConfig;
 use App\Models\Suppliers\Suppliers;
 use App\Models\Suppliers\UserSupplier;
 use App\Models\Suppliers\WorkingHours;
-use App\Models\User;
+use App\Models\User\User;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 class SuppliersController extends Controller

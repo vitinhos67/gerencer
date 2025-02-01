@@ -3,23 +3,14 @@
 namespace App\Http\Requests;
 
 use App\Models\Suppliers\UserSupplier;
+use App\Services\PermissionsService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreWorkingHoursRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $user = $this->user();
-        if (!$user) {
-            return false;
-        }
-        $supplierId = $this->input('supplier_id');
-
-        $isUserAssociatedWithSupplier = UserSupplier::where('user_id', $user->id)
-            ->where('supplier_id', $supplierId)
-            ->exists();
-
-        return $isUserAssociatedWithSupplier;
+        return PermissionsService::UserAssociatedWithSupplier($this->user(), $this->input('supplier_id'));
     }
 
 

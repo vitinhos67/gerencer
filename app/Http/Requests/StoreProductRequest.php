@@ -2,13 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Services\PermissionsService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreProductRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return PermissionsService::UserAssociatedWithSupplier($this->user(), $this->input('supplier_id'));
     }
 
     public function rules(): array
