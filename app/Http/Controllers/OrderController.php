@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrderRequest;
-use App\Models\User\UserAddress;
 use App\Services\Order\OrderService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {

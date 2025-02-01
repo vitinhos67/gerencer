@@ -8,7 +8,7 @@ use App\Models\Suppliers\SupplierConfig;
 use App\Models\Suppliers\Suppliers;
 use App\Models\Suppliers\UserSupplier;
 use App\Models\Suppliers\WorkingHours;
-use App\Models\User\User;
+use App\Models\User;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 class SuppliersController extends Controller
@@ -42,8 +42,8 @@ class SuppliersController extends Controller
         DB::beginTransaction();
         try {
             $validatedData = $request->validated();
-            $userConfig = new SupplierConfig($validatedData);
-            $userConfig->save();
+            $supplierConfig = new SupplierConfig($validatedData);
+            $supplierConfig->save();
 
             foreach ($validatedData['working_hours'] as $day) {
                 $opening_time = new DateTime($day['opening_time']);

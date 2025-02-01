@@ -2,7 +2,7 @@
 
 namespace App\Models\Orders;
 
-use App\Models\User\User;
+use App\Models\User;
 use App\Models\User\UserAddress;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

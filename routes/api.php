@@ -16,7 +16,6 @@ Route::middleware(['role:moderador|admin'])->group(function () {
 
     Route::prefix('supplier')->group(function () {
         Route::get('/', [SuppliersController::class, 'get']);
-
         Route::prefix('config')->group(function () {
             Route::post('/', [SuppliersController::class, 'createConfig']);
         });

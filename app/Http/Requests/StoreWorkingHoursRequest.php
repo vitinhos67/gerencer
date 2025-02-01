@@ -2,14 +2,26 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Suppliers\UserSupplier;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreWorkingHoursRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        $user = $this->user();
+        if (!$user) {
+            return false;
+        }
+        $supplierId = $this->input('supplier_id');
+
+        $isUserAssociatedWithSupplier = UserSupplier::where('user_id', $user->id)
+            ->where('supplier_id', $supplierId)
+            ->exists();
+
+        return $isUserAssociatedWithSupplier;
     }
+
 
     public function rules(): array
     {
@@ -24,7 +36,6 @@ class StoreWorkingHoursRequest extends FormRequest
             'type' => 'nullable|string|max:255',
             'average_rating' => 'nullable|numeric|min:0|max:5', 
             'order_limit' => 'nullable|integer|min:1',
-        
             'working_hours' => 'required|array|size:7',
             'working_hours.*.day_of_week' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
             'working_hours.*.is_closed' => 'required|boolean',
