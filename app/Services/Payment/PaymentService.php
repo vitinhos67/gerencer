@@ -66,6 +66,7 @@ class PaymentService
             case 'mercado_pago':
                 $mpAccess = new MPAccess();
                 $response = $mpAccess->makePayment($transaction, $data, $integration);
+                break;
         };
 
         if(data_get($response, 'external_id')) {

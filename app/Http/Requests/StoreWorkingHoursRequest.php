@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Suppliers\UserSupplier;
 use App\Services\PermissionsService;
 use Illuminate\Foundation\Http\FormRequest;
 

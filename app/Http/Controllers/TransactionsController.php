@@ -2,10 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ValidateOriginTransactionsRequest;
+use App\Services\Transactions\TransactionsService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 class TransactionsController extends Controller
 {
-    public function confirmPay()
+    public function notification(ValidateOriginTransactionsRequest $request)
     {
 
+        $validatedData = $request->validated();
+
+        $service = new TransactionsService;
+        $service->receiving($validatedData);
+
+        return response()->json([
+            'success' => true,
+        ], 200);
     }
 }

@@ -14,7 +14,7 @@ Route::post('/auth/token', [AuthController::class, 'generateToken'])->withoutMid
 Route::post('/register', [UserController::class, 'createUser'])->withoutMiddleware('auth:sanctum');
 Route::post('/supplier', [SuppliersController::class, 'create'])->withoutMiddleware('auth:sanctum');
 
-Route::post('/transactions/payment/{id}', [TransactionsController::class, 'confirmPay'])->withoutMiddleware('auth:sanctum');
+Route::post('/transactions/notification', [TransactionsController::class, 'notification'])->withoutMiddleware('auth:sanctum');
 
 Route::middleware(['role:moderador|admin'])->group(function () {
 

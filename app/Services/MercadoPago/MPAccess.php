@@ -2,6 +2,7 @@
 
 namespace App\Services\MercadoPago;
 
+use App\Models\Orders\Order;
 use App\Models\PaymentIntegrations;
 use App\Models\Transactions\Transactions;
 use App\Utils\Utils;
@@ -11,6 +12,7 @@ use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
+use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 
 class MPAccess
 {
@@ -39,9 +41,9 @@ class MPAccess
                 "external_reference" => $transactions->reference,
             ];
 
-            if (env('APP_ENV') == 'PROD') {
-                $paymentOptions['notification_url'] = env('APP_URL') . "/transactions/notification/$transactions->reference";
-            }
+            /*             if (env('APP_ENV') == 'PROD') {
+            $paymentOptions['notification_url'] = env('APP_URL') . "/transactions/notification/$transactions->reference";
+            } */
 
             $payment = $client->create($paymentOptions, $request_options);
             if (!($payment->getResponse()->getStatusCode() == 201)) {
@@ -54,7 +56,7 @@ class MPAccess
                 'success' => true,
                 'qr_code' => $content['point_of_interaction']['transaction_data']['qr_code'],
                 'qr_code_base64' => $content['point_of_interaction']['transaction_data']['qr_code_base64'],
-                'external_id' => $content['id']
+                'external_id' => $content['id'],
             ];
         } catch (MPApiException $e) {
             return [
@@ -64,6 +66,31 @@ class MPAccess
             return [
                 'success' => false,
             ];
+        }
+    }
+
+    public function confirmPayment(PaymentIntegrations $integration, Transactions $transactions)
+    {
+        try {
+            $accessToken = $this->getAcessToken($integration);
+            $getPayment = $this->fetchConfirmPayment($transactions->external_id, $accessToken);
+
+            switch ($getPayment['status']) {
+                case 'approved':
+                    $transactions->status = 'paid';
+                    $transactions->paid_at = now();
+                    $transactions->update();
+
+                    $order = Order::where('id', $transactions->order_id)->first();
+                    $order->status = 3; // Aproved
+                    break;
+                case 'pending':
+                    //
+            }
+
+            return true;
+        } catch (\Throwable $th) {
+            return false;
         }
     }
 
@@ -87,16 +114,74 @@ class MPAccess
 
     private function fetchAccess($secret, $user)
     {
-        $response = Http::post($this->base_url . '/oauth/token', [
-            'client_secret' => $secret,
-            'client_id' => $user,
-            'grant_type' => 'client_credentials',
-        ]);
-        if ($response->successful()) {
-            $body = $response->json();
-            return data_get($body, 'access_token');
-        } else {
-            false;
+        try {
+            $response = Http::post($this->base_url . '/oauth/token', [
+                'client_secret' => $secret,
+                'client_id' => $user,
+                'grant_type' => 'client_credentials',
+            ]);
+            if ($response->successful()) {
+                $body = $response->json();
+                return data_get($body, 'access_token');
+            } else {
+                false;
+            }
+        } catch (\Throwable $th) {
+            return false;
         }
+
+    }
+
+    private function fetchConfirmPayment($id, $access)
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $access,
+            ])->get($this->base_url . "/v1/payments/$id");
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                return false;
+            }
+        } catch (\Throwable $th) {
+            return false;
+        }
+    }
+
+    public static function confirmOrigin(string $secret): bool
+    {
+        $xSignature = $_SERVER['HTTP_X_SIGNATURE'] ?? null;
+        $xRequestId = $_SERVER['HTTP_X_REQUEST_ID'] ?? null;
+        $queryParams = $_GET;
+        $dataID = $queryParams['data_id'] ?? null;
+
+        if (!$dataID) {
+            return false;
+        }
+        $parts = explode(',', $xSignature);
+
+        $ts = null;
+        $hash = null;
+
+        foreach ($parts as $part) {
+            $keyValue = explode('=', $part, 2);
+            if (count($keyValue) == 2) {
+                $key = trim($keyValue[0]);
+                $value = trim($keyValue[1]);
+
+                if ($key === "ts") {
+                    $ts = $value;
+                } elseif ($key === "v1") {
+                    $hash = $value;
+                }
+            }
+        }
+        if (!$ts || !$hash) {
+            return false;
+        }
+
+        $manifest = "id:$dataID;request-id:$xRequestId;ts:$ts;";
+        $sha = hash_hmac('sha256', $manifest, $secret);
+        return hash_equals($sha, $hash);
     }
 }
