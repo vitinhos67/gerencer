@@ -4,6 +4,7 @@ namespace App\Services\Payment;
 
 use App\Models\Orders\Order;
 use App\Models\Orders\OrderProducts;
+use App\Models\PaymentIntegrations;
 use App\Models\Transactions\Transactions;
 use App\Services\MercadoPago\MPAccess;
 use App\Utils\Utils;
@@ -46,8 +47,27 @@ class PaymentService
             'email' => $order->user_email,
         ];
 
-        $mpAccess = new MPAccess();
-        return $mpAccess->makePayment($transaction, $data);
+
+        return $this->makeByProvider($order->supplier_id, $transaction, $data);
+    }
+
+    public function makeByProvider(int $supplier_id, Transactions $transaction, array $data)
+    {
+        $integration = PaymentIntegrations::where('supplier_id', $supplier_id)->first();
+
+        if(!$integration) {
+            return [
+                'success' => false,
+                'errors' => [
+                    'not-configured-integration'
+                ]
+            ];
+        }
+        switch($integration->provider) {
+            case 'mercado_pago':
+                $mpAccess = new MPAccess();
+                return $mpAccess->makePayment($transaction, $data, $integration);
+        };
     }
 
     public static function createTransaction(array $data): Transactions

@@ -17,10 +17,10 @@ class CreateOrderRequest extends FormRequest
             'user_address_id' => 'nullable|integer|exists:user_addresses,id',
             'delivery_type' => 'required|string|max:255|in:pickup,delivery',
             'status_id' => 'required|integer|exists:order_statuses,id',
+            'supplier_id' => 'required|integer|exists:suppliers,id',
             'products' => 'required|array',
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
-        
             // 'address' é obrigatório se 'user_address_id' não for enviado e 'delivery_type' for 'delivery'
             'address' => 'required_if:delivery_type,delivery|required_without:user_address_id|array',
             'address.street' => 'required_with:address|string',

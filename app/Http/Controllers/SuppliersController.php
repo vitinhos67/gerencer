@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PaymentIntegrationsRequest;
 use App\Http\Requests\StoreSuppliersRequest;
 use App\Http\Requests\StoreWorkingHoursRequest;
+use App\Models\PaymentIntegrations;
 use App\Models\Suppliers\SupplierConfig;
 use App\Models\Suppliers\Suppliers;
 use App\Models\Suppliers\UserSupplier;
 use App\Models\Suppliers\WorkingHours;
 use App\Models\User\User;
 use DateTime;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+
 class SuppliersController extends Controller
 {
     public function create(StoreSuppliersRequest $request)
@@ -70,4 +74,25 @@ class SuppliersController extends Controller
             ], 500);
         }
     }
+
+    public function paymentConfig(PaymentIntegrationsRequest $request)
+    {
+        $validatedData = $request->validated();
+        $data = [
+            'supplier_id' => $validatedData['supplier_id'],
+            'provider' => $validatedData['provider'],
+            'public_key' => isset($validatedData['public_key']) ? Crypt::encryptString($validatedData['public_key']) : null,
+            'secret_key' => isset($validatedData['secret_key']) ? Crypt::encryptString($validatedData['secret_key']) : null,
+            'access_token' => isset($validatedData['access_token']) ? Crypt::encryptString($validatedData['access_token']) : null,
+            'user' => isset($validatedData['user']) ? Crypt::encryptString($validatedData['user']) : null,
+            'active' => isset($validatedData['active']) ? $validatedData['active'] : true,
+        ];
+
+        PaymentIntegrations::updateOrCreate([
+            'supplier_id' => $data['supplier_id'],
+        ], $data);
+
+        return response()->json(['message' => 'Configuração criada com sucesso!'], 201);
+    }
+
 }

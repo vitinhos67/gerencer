@@ -2,8 +2,10 @@
 
 namespace App\Services\MercadoPago;
 
+use App\Models\PaymentIntegrations;
 use App\Models\Transactions\Transactions;
 use App\Utils\Utils;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Http;
 use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
@@ -15,11 +17,10 @@ class MPAccess
 
     private $base_url = 'https://api.mercadopago.com';
 
-    public function makePayment(Transactions $transactions, array $data)
+    public function makePayment(Transactions $transactions, array $data, PaymentIntegrations $integration)
     {
         try {
-
-            $accessToken = $this->getAcessToken();
+            $accessToken = $this->getAcessToken($integration);
             MercadoPagoConfig::setAccessToken($accessToken);
             $client = new PaymentClient();
             $request_options = new RequestOptions();
@@ -66,13 +67,9 @@ class MPAccess
         }
     }
 
-    private function getAcessToken()
+    private function getAcessToken($integration)
     {
-        if (env('MP_PROD')) {
-            return self::fetchAccess();
-        } else {
-            return env('ACCESS_TOKEN_TEST');
-        }
+        return $this->fetchAccess(Crypt::decryptString($integration->secret_key), Crypt::decryptString($integration->user));
     }
 
     private function paymentMethods($accessToken)
@@ -88,11 +85,11 @@ class MPAccess
         }
     }
 
-    private function fetchAccess()
+    private function fetchAccess($secret, $user)
     {
         $response = Http::post($this->base_url . '/oauth/token', [
-            'client_secret' => env('SECRET_KEY_MP'),
-            'client_id' => env('USER_ID_MP'),
+            'client_secret' => $secret,
+            'client_id' => $user,
             'grant_type' => 'client_credentials',
         ]);
         if ($response->successful()) {

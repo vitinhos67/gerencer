@@ -11,7 +11,14 @@ class OrderController extends Controller
     {
         $validatedData = $request->validated();
         $service = new OrderService;
-        $order = $service->create($validatedData, $request->user());
+        $order = $service->create($validatedData, $request->user());;
+        if(!$order) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Contém produtos que não pertence ao fornecedor.'
+            ], 401);
+        }
+        
         return response()->json($order, 201);
     }
 

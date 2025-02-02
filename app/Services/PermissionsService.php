@@ -18,6 +18,4 @@ class PermissionsService
 
         return $isUserAssociatedWithSupplier;
     }
-
-    
 }

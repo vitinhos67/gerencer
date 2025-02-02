@@ -10,11 +10,12 @@ return new class extends Migration
     {
         Schema::create('working_hours', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade'); // Relacionamento com o fornecedor
+            $table->unsignedBigInteger('supplier_id');
+            $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade');
             $table->enum('day_of_week', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])->nullable(); // Dia da semana
-            $table->time('opening_time')->nullable(); // Horário de abertura
-            $table->time('closing_time')->nullable(); // Horário de fechamento
-            $table->boolean('is_closed')->nullable(); // Indica se o estabelecimento estará fechado no proximo dia
+            $table->time('opening_time')->nullable();
+            $table->time('closing_time')->nullable();
+            $table->boolean('is_closed')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -20,7 +20,9 @@ Route::middleware(['role:moderador|admin'])->group(function () {
         Route::prefix('config')->group(function () {
             Route::post('/', [SuppliersController::class, 'createConfig']);
         });
-
+        Route::prefix('/payment-integration')->group(function () {
+            Route::post('/', [SuppliersController::class, 'paymentConfig']);
+        });
     });
 
     Route::prefix('products')->group(function () {
