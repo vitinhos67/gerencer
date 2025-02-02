@@ -11,7 +11,7 @@ use App\Utils\Utils;
 
 class PaymentService
 {
-    public function make(array $data)
+    public function create(array $data)
     {
         $order = Order::getPaymentMethod()
             ->getUser()
@@ -47,7 +47,6 @@ class PaymentService
             'email' => $order->user_email,
         ];
 
-
         return $this->makeByProvider($order->supplier_id, $transaction, $data);
     }
 
@@ -66,8 +65,15 @@ class PaymentService
         switch($integration->provider) {
             case 'mercado_pago':
                 $mpAccess = new MPAccess();
-                return $mpAccess->makePayment($transaction, $data, $integration);
+                $response = $mpAccess->makePayment($transaction, $data, $integration);
         };
+
+        if(data_get($response, 'external_id')) {
+            $transaction->external_id = $response['external_id'];
+            $transaction->update();
+        }
+
+        return $response;
     }
 
     public static function createTransaction(array $data): Transactions

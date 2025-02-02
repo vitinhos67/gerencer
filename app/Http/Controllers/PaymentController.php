@@ -7,11 +7,11 @@ use App\Services\Payment\PaymentService;
 
 class PaymentController extends Controller
 {
-    public function make(PaymentRequest $request)
+    public function create(PaymentRequest $request)
     {
         $validatedData = $request->validated();
         $service = new PaymentService();
-        $payment = $service->make($validatedData);
+        $payment = $service->create($validatedData);
 
         if (!data_get($payment, 'success')) {
             return response()->json([

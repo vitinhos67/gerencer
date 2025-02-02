@@ -18,6 +18,7 @@ class Transactions extends Model
         'user_id',
         'order_id',
         'reference',
+        'external_id',
         'status',
         'amount',
         'currency',

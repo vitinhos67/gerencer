@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SuppliersController;
+use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/token', [AuthController::class, 'generateToken'])->withoutMiddleware('auth:sanctum');
 Route::post('/register', [UserController::class, 'createUser'])->withoutMiddleware('auth:sanctum');
 Route::post('/supplier', [SuppliersController::class, 'create'])->withoutMiddleware('auth:sanctum');
+
+Route::post('/transactions/payment/{id}', [TransactionsController::class, 'confirmPay'])->withoutMiddleware('auth:sanctum');
 
 Route::middleware(['role:moderador|admin'])->group(function () {
 
@@ -39,6 +42,6 @@ Route::middleware(['role:moderador|admin'])->group(function () {
 Route::middleware(['role:user|moderador|admin'])->group(function () {
     Route::prefix('order')->group(function () {
         Route::post('/', [OrderController::class, 'create']);
-        Route::post('/payment', [PaymentController::class, 'make']);
+        Route::post('/payment', [PaymentController::class, 'create']);
     });
 });

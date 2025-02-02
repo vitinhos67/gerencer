@@ -28,7 +28,7 @@ class MPAccess
             $request_options->setCustomHeaders(["X-Idempotency-Key: $uuid"]);
 
             $paymentOptions = [
-                "transaction_amount" => 1.00,
+                "transaction_amount" => $data['amount'],
                 "description" => $data['description'] ?? null,
                 "payment_method_id" => $data['payment_method_id'],
                 "payer" => [
@@ -40,7 +40,7 @@ class MPAccess
             ];
 
             if (env('APP_ENV') == 'PROD') {
-                $paymentOptions['notification_url'] = env('APP_URL') . "/notification/$transactions->reference";
+                $paymentOptions['notification_url'] = env('APP_URL') . "/transactions/notification/$transactions->reference";
             }
 
             $payment = $client->create($paymentOptions, $request_options);
@@ -50,11 +50,11 @@ class MPAccess
                 ];
             }
             $content = $payment->getResponse()->getContent();
-
             return [
                 'success' => true,
                 'qr_code' => $content['point_of_interaction']['transaction_data']['qr_code'],
                 'qr_code_base64' => $content['point_of_interaction']['transaction_data']['qr_code_base64'],
+                'external_id' => $content['id']
             ];
         } catch (MPApiException $e) {
             return [
