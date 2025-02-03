@@ -10,7 +10,6 @@ class TransactionsService
 {
     public function receiving(array $data)
     {
-    
         if ($data['type'] != 'payment') {
             return true;
         }

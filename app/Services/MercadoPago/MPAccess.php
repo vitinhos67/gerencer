@@ -12,7 +12,6 @@ use MercadoPago\Client\Common\RequestOptions;
 use MercadoPago\Client\Payment\PaymentClient;
 use MercadoPago\Exceptions\MPApiException;
 use MercadoPago\MercadoPagoConfig;
-use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 
 class MPAccess
 {
@@ -41,8 +40,8 @@ class MPAccess
                 "external_reference" => $transactions->reference,
             ];
 
-            /*             if (env('APP_ENV') == 'PROD') {
-            $paymentOptions['notification_url'] = env('APP_URL') . "/transactions/notification/$transactions->reference";
+            /* if (env('APP_ENV') == 'PROD') {
+                $paymentOptions['notification_url'] = env('APP_URL') . "/transactions/notification/$transactions->reference";
             } */
 
             $payment = $client->create($paymentOptions, $request_options);
@@ -129,7 +128,6 @@ class MPAccess
         } catch (\Throwable $th) {
             return false;
         }
-
     }
 
     private function fetchConfirmPayment($id, $access)
