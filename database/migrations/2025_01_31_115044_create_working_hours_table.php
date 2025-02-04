@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('working_hours', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('supplier_id');
             $table->foreignId('supplier_id')->constrained('suppliers')->onDelete('cascade');
             $table->enum('day_of_week', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])->nullable(); // Dia da semana
             $table->time('opening_time')->nullable();
