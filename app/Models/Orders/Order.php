@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-
     use SoftDeletes;
 
     protected $fillable = ['user_id', 'user_address_id', 'status', 'delivery_type', 'payment_method_id', 'paid', 'supplier_id'];
@@ -36,5 +35,4 @@ class Order extends Model
     {
         return $query->leftJoin('payment_methods as pm', 'orders.payment_method_id', 'pm.id');
     }
-
 }

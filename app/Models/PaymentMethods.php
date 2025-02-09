@@ -29,5 +29,4 @@ class PaymentMethods extends Model
             'deleted_at' => 'datetime',
         ];
     }
-
 }

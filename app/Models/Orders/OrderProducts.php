@@ -11,7 +11,6 @@ class OrderProducts extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = "order_product";
-
     protected $fillable = [
         'order_id',
         'product_id'
@@ -30,5 +29,4 @@ class OrderProducts extends Model
     {
         return $query->leftJoin("products as p", 'p.id', 'order_product.product_id');
     }
-
 }

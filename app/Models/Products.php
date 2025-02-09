@@ -32,5 +32,4 @@ class Products extends Model
             'deleted_at' => 'datetime',
         ];
     }
-
 }

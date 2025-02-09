@@ -8,5 +8,4 @@ class Utils
     {
         return (string) Str::uuid();
     }
-
 }

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class SupplierConfig extends Model
 {
     protected $table = 'supplier_config';
-
     protected $fillable = [
         'id',
         'is_active',
@@ -33,5 +32,4 @@ class SupplierConfig extends Model
     {
         return $this->belongsTo(Suppliers::class, 'supplier_id');
     }
-
 }

@@ -18,5 +18,4 @@ class WorkingHours extends Model
         'opening_time' => 'datetime',
         'closing_time' => 'datetime',
     ];
-
 }
