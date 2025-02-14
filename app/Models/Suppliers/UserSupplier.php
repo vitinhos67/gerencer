@@ -18,5 +18,4 @@ class UserSupplier extends Model
             'deleted_at' => 'datetime',
         ];
     }
-
 }
