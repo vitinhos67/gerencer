@@ -10,7 +10,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
-Route::post('/auth/token', [AuthController::class, 'generateToken'])->withoutMiddleware('auth:sanctum');
+Route::post('/auth/login', [AuthController::class, 'login'])->withoutMiddleware('auth:sanctum');
 Route::post('/register', [UserController::class, 'createUser'])->withoutMiddleware('auth:sanctum');
 Route::post('/supplier', [SuppliersController::class, 'create'])->withoutMiddleware('auth:sanctum');
 
