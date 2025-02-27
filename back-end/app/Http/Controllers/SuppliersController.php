@@ -38,7 +38,7 @@ class SuppliersController extends Controller
         $userSupplier->supplier_id = $supplier_id;
         $userSupplier->save();
 
-        return $user->createToken('user')->plainTextToken;
+        return $user->createToken('admin')->plainTextToken;
     }
 
     public function createConfig(StoreWorkingHoursRequest $request)
