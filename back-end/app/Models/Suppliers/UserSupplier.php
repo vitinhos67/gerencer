@@ -9,7 +9,6 @@ class UserSupplier extends Model
     protected $table = 'supplier_user';
     protected $fillable = ['user_id', 'supplier_id'];
 
-
     protected function casts(): array
     {
         return [
@@ -17,6 +16,11 @@ class UserSupplier extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Suppliers::class, 'supplier_id');
     }
 
 }
