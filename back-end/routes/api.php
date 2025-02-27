@@ -16,8 +16,11 @@ Route::post('/supplier', [SuppliersController::class, 'create'])->withoutMiddlew
 
 Route::post('/webhook/notification-transaction', [TransactionsController::class, 'notification'])->withoutMiddleware('auth:sanctum');
 
+Route::middleware(['role:admin'])->group(function () {
+    Route::post('/printer', [PrinterController::class, 'configPrinter']);
+    Route::post('/printer', [PrinterController::class, 'get']);
+});
 Route::middleware(['role:moderador|admin'])->group(function () {
-
     Route::prefix('supplier')->group(function () {
         Route::get('/', [SuppliersController::class, 'get']);
         Route::prefix('config')->group(function () {
