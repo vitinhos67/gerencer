@@ -8,6 +8,7 @@ use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 // Public routes
 Route::post('/auth/login', [AuthController::class, 'login'])->withoutMiddleware('auth:sanctum');
@@ -18,7 +19,7 @@ Route::post('/webhook/notification-transaction', [TransactionsController::class,
 
 Route::middleware(['role:admin'])->group(function () {
     Route::post('/printer', [PrinterController::class, 'configPrinter']);
-    Route::post('/printer', [PrinterController::class, 'get']);
+    Route::get('/printer', [PrinterController::class, 'get']);
 });
 Route::middleware(['role:moderador|admin'])->group(function () {
     Route::prefix('supplier')->group(function () {
