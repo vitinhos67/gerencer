@@ -8,14 +8,15 @@ use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
+
 
 // Public routes
 Route::post('/auth/login', [AuthController::class, 'login'])->withoutMiddleware('auth:sanctum');
 Route::post('/register', [UserController::class, 'createUser'])->withoutMiddleware('auth:sanctum');
 Route::post('/supplier', [SuppliersController::class, 'create'])->withoutMiddleware('auth:sanctum');
+Route::post('/webhook/notification-transaction', [TransactionsController::class, 'notification'])
+    ->withoutMiddleware(['auth:sanctum']);
 
-Route::post('/webhook/notification-transaction', [TransactionsController::class, 'notification'])->withoutMiddleware('auth:sanctum');
 
 Route::middleware(['role:admin'])->group(function () {
     Route::post('/printer', [PrinterController::class, 'configPrinter']);

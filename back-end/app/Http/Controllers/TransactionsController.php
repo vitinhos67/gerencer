@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ValidateOriginTransactionsRequest;
 use App\Services\Transactions\TransactionsService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
-class TransactionsController extends Controller
+class TransactionsController
 {
     public function notification(ValidateOriginTransactionsRequest $request)
     {

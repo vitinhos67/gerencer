@@ -16,7 +16,6 @@ class ValidateOriginTransactionsRequest extends FormRequest
             return true;
         } else {
             $transactionId = $this->input('data.id');
-
             $transactions = Transactions::where('external_id', $transactionId)
                 ->leftJoin('orders', 'orders.id', '=', 'transactions.order_id')
                 ->leftJoin('suppliers', 'suppliers.id', '=', 'orders.supplier_id')
