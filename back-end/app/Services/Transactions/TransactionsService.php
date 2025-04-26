@@ -23,15 +23,24 @@ class TransactionsService
         )
         ->first();
 
-        switch ($data['action']) {
-            case 'payment.created':
-                break;
-            case 'payment.updated':
-                return $this->searchPayment($transactions);
-                break;
+        $integration = PaymentIntegrations::where('supplier_id', $transactions->supplier_id)->first();
 
+        if(!$integration) {
+            return [
+                'success' => false,
+                'errors' => [
+                    'not-configured-integration'
+                ]
+            ];
         }
-
+        switch($integration->provider) {
+            case 'mercado_pago':
+                switch ($data['action']) {
+                    case 'payment.created':
+                    case 'payment.updated':
+                        return $this->searchPayment($transactions);
+                }  
+        };
         return true;
     }
 

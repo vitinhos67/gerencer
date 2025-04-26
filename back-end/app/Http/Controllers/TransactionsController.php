@@ -11,12 +11,9 @@ class TransactionsController extends Controller
 {
     public function notification(ValidateOriginTransactionsRequest $request)
     {
-
         $validatedData = $request->validated();
-
         $service = new TransactionsService;
         $service->receiving($validatedData);
-
         return response()->json([
             'success' => true,
         ], 200);
