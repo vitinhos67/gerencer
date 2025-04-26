@@ -27,9 +27,8 @@ class MPAccess
             $request_options = new RequestOptions();
             $uuid = Utils::uuid();
             $request_options->setCustomHeaders(["X-Idempotency-Key: $uuid"]);
-
             $paymentOptions = [
-                "transaction_amount" => $data['amount'],
+                "transaction_amount" => (float) $data['amount'],
                 "description" => $data['description'] ?? null,
                 "payment_method_id" => $data['payment_method_id'],
                 "payer" => [

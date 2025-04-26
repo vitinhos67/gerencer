@@ -12,7 +12,6 @@ class PaymentController extends Controller
         $validatedData = $request->validated();
         $service = new PaymentService();
         $payment = $service->create($validatedData);
-
         if (!data_get($payment, 'success')) {
             return response()->json([
                 'success' => false,

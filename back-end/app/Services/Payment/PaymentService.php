@@ -26,7 +26,7 @@ class PaymentService
         });
 
         $fee = floatval($order->fee);
-        $totalAmount = $amount + ($amount * ($fee / 100));
+        $totalAmount = round($amount + ($amount * ($fee / 100)), 2);
         list($firstName, $lastName) = array_pad(explode(' ', $order->user_name, 2), 2, '');
 
         $transaction = $this->createTransaction([
@@ -73,7 +73,6 @@ class PaymentService
             $transaction->external_id = $response['external_id'];
             $transaction->update();
         }
-
         return $response;
     }
 
