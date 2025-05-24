@@ -39,4 +39,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserAddress::class);
     }
+
+    public function userSupplier()
+    {
+        return $this->hasOne('App\Models\Suppliers\UserSupplier');
+    }
+    public function getSupplierAttribute()
+    {
+        return $this->userSupplier ? $this->userSupplier->supplier : null;
+    }
+    public function getIsAdminAttribute()
+    {
+        return $this->hasRole('admin');
+    }
+    public function getIsSupplierAttribute()
+    {
+        return $this->hasRole('supplier');
+    }
+    public function getIsClientAttribute()
+    {
+        return $this->hasRole('client');
+    }
+    public function getIsSuperAdminAttribute()
+    {
+        return $this->hasRole('super-admin');
+    }           
 }
