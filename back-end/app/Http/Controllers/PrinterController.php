@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Controllers;
+
 use App\Models\Printers;
 use App\Models\Suppliers\UserSupplier;
 use App\Utils\Utils;
@@ -17,7 +19,6 @@ class PrinterController
     
     public function configPrinter(Request $request)
     {
-
         $user          = $request->user();
         $validatedData = $request->validate([
             'ip'                => 'required|string',
