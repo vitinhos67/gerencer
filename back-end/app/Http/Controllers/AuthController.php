@@ -12,13 +12,17 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)
+            ->when($request->has('include_supplier_if_admin') || true, function ($query) { // Or based on other conditions
+                $query->with('userSupplier.supplier');
+            })
+            ->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['success' => false, 'errors' => 'invalid-credentials'], 401);
         }
 
@@ -27,7 +31,7 @@ class AuthController extends Controller
         $response = ['token' => $token, "user" => $user];
 
         if ($user->hasRole('admin')) {
-            $response['supplier'] = UserSupplier::where('user_id', $user->id)->first()->supplier;
+            $response['supplier'] = $user->userSupplier->supplier;
         }
 
         return response()->json($response, 200);
