@@ -27,6 +27,8 @@ class PaymentService
 
         $fee = floatval($order->fee);
         $totalAmount = round($amount + ($amount * ($fee / 100)), 2);
+
+        // Split the user's name into first and last names
         list($firstName, $lastName) = array_pad(explode(' ', $order->user_name, 2), 2, '');
 
         $transaction = $this->createTransaction([
