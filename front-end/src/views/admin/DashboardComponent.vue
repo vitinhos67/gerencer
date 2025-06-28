@@ -44,7 +44,7 @@
                 <div class="pa-2">
                     <v-btn
                         block
-                        color="error"
+                        color="secondary"
                         @click="handleLogout"
                         :loading="loading"
                     >

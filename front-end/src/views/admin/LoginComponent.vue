@@ -15,16 +15,22 @@
                         :disabled="loading">
                         {{ loading ? 'Entrando...' : 'Entrar' }}
                     </v-btn>
+                    <a class="mt-4" style="display: table; margin: 0 auto; cursor: pointer; text-decoration: underline;"
+                        v-on:click="goToForgotPassword">
+                        Esqueceu sua senha?
+                    </a>
                 </v-form>
             </v-card-text>
         </v-card>
     </v-container>
+    <FooterComponent></FooterComponent>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import NavBarComponent from '@/components/NavBarComponent.vue'
 import { useAuth } from '@/composables/useAuth'
+import FooterComponent from '@/components/FooterComponent.vue'
 
 interface LoginForm {
     email: string
@@ -71,17 +77,14 @@ export default defineComponent({
 
             try {
                 const result = await this.login(this.form)
-                
+
                 if (result.success) {
-                    // Redirecionar para o painel administrativo
                     this.$router.push('/admin/dashboard')
                 } else {
-                    // Mostrar erro
                     this.errors.email = result.message || 'Credenciais inválidas'
                     this.errors.password = result.message || 'Credenciais inválidas'
                 }
             } catch (error: any) {
-                console.error('Erro no login:', error)
                 this.errors.email = 'Erro ao fazer login'
                 this.errors.password = 'Erro ao fazer login'
             }
@@ -120,6 +123,9 @@ export default defineComponent({
 
         clearError(field: keyof FormErrors) {
             this.errors[field] = ''
+        },
+        goToForgotPassword() {
+            this.$router.push('/forgot-password')
         }
     }
 })
