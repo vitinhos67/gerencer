@@ -7,30 +7,12 @@
             </v-card-title>
             <v-card-text>
                 <v-form @submit.prevent="handleLogin">
-                    <v-text-field 
-                        v-model="form.email"
-                        label="Email" 
-                        type="email" 
-                        class="mb-6"
-                        :error-messages="errors.email"
-                        @input="clearError('email')"
-                    />
-                    <v-text-field 
-                        v-model="form.password"
-                        label="Senha" 
-                        type="password"
-                        :error-messages="errors.password"
-                        @input="clearError('password')"
-                    />
-                    <v-btn 
-                        type="submit"
-                        color="primary" 
-                        block 
-                        large 
-                        class="mt-4"
-                        :loading="loading"
-                        :disabled="loading"
-                    >
+                    <v-text-field v-model="form.email" label="Email" type="email" class="mb-6"
+                        :error-messages="errors.email" @input="clearError('email')" />
+                    <v-text-field v-model="form.password" label="Senha" type="password"
+                        :error-messages="errors.password" @input="clearError('password')" />
+                    <v-btn type="submit" color="primary" block large class="mt-4" :loading="loading"
+                        :disabled="loading">
                         {{ loading ? 'Entrando...' : 'Entrar' }}
                     </v-btn>
                 </v-form>
@@ -43,78 +25,107 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import NavBarComponent from '@/components/NavBarComponent.vue'
-import SupplierService from '@/services/SupplierService'
+import LoginService from '@/services/LoginService'
 
 interface LoginForm {
-  email: string
-  password: string
+    email: string
+    password: string
+}
+
+interface LoginResponse {
+    token: string
+    user: any
 }
 
 interface FormErrors {
-  email: string
-  password: string
+    email: string
+    password: string
 }
 
 export default defineComponent({
-  name: 'LoginComponent',
-  components: {
-    NavBarComponent
-  },
-  data() {
-    return {
-      form: {
-        email: '',
-        password: ''
-      } as LoginForm,
-      errors: {
-        email: '',
-        password: ''
-      } as FormErrors,
-      loading: false
-    }
-  },
-  methods: {
-    async handleLogin() {
-      const service = new SupplierService();
-      console.log('opa', await service.get(10));
+    name: 'LoginComponent',
+    components: {
+        NavBarComponent
+    },
+    data() {
+        return {
+            form: {
+                email: '',
+                password: ''
+            } as LoginForm,
+            errors: {
+                email: '',
+                password: ''
+            } as FormErrors,
+            loading: false
+        }
+    },
+    methods: {
+        async handleLogin() {
+            if (!this.validateForm()) {
+                return
+            }
 
-    },
-    
-    validateForm(): boolean {
-      let isValid = true
-      
-      if (!this.form.email) {
-        this.errors.email = 'Email é obrigatório'
-        isValid = false
-      } else if (!this.isValidEmail(this.form.email)) {
-        this.errors.email = 'Email inválido'
-        isValid = false
-      }
-      
-      if (!this.form.password) {
-        this.errors.password = 'Senha é obrigatória'
-        isValid = false
-      }
-      
-      return isValid
-    },
-    
-    isValidEmail(email: string): boolean {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      return emailRegex.test(email)
-    },
-    
-    clearErrors() {
-      this.errors = {
-        email: '',
-        password: ''
-      }
-    },
-    
-    clearError(field: keyof FormErrors) {
-      this.errors[field] = ''
+            this.loading = true
+            this.clearErrors()
+
+            try {
+                const service = new LoginService()
+                const response = await service.create(this.form)
+                console.log(response);
+                if (response.success) {
+                    // Salvar token e dados do usuário
+                    localStorage.setItem('token', response?.data.token || '')
+                    localStorage.setItem('user', JSON.stringify(response?.data.user || {}))
+
+                    // Redirecionar para o painel administrativo
+                    this.$router.push('/admin/dashboard')
+                } else {
+                    // Mostrar erro da API
+                    console.error('Erro no login:', response.message)
+                }
+            } catch (error: any) {
+                console.log(error);
+            } finally {
+                this.loading = false
+            }
+        },
+
+        validateForm(): boolean {
+            let isValid = true
+
+            if (!this.form.email) {
+                this.errors.email = 'Email é obrigatório'
+                isValid = false
+            } else if (!this.isValidEmail(this.form.email)) {
+                this.errors.email = 'Email inválido'
+                isValid = false
+            }
+
+            if (!this.form.password) {
+                this.errors.password = 'Senha é obrigatória'
+                isValid = false
+            }
+
+            return isValid
+        },
+
+        isValidEmail(email: string): boolean {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            return emailRegex.test(email)
+        },
+
+        clearErrors() {
+            this.errors = {
+                email: '',
+                password: ''
+            }
+        },
+
+        clearError(field: keyof FormErrors) {
+            this.errors[field] = ''
+        }
     }
-  }
 })
 </script>
 

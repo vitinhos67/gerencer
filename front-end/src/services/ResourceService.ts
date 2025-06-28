@@ -1,7 +1,7 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios';
 
 export interface ApiResponse<T> {
-    data: T;
+    data: any;
     message?: string;
     success: boolean;
 }
@@ -22,7 +22,7 @@ class ResourceService<T> {
     constructor(resource: string) {
         this.resource = resource;
         this.http = axios.create({
-            baseURL: (process.env as any).VUE_APP_API_URL || 'http://localhost:8000',
+            baseURL: (process.env as any).VUE_APP_API_URL || 'http://localhost:8000/api',
             headers: {
                 'Content-Type': 'application/json'
             }

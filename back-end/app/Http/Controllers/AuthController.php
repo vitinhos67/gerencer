@@ -27,14 +27,14 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('user_login')->plainTextToken;
-
-        $response = ['token' => $token, "user" => $user];
-
-        if ($user->hasRole('admin')) {
-            $response['supplier'] = $user->userSupplier->supplier;
-        }
-
-        return response()->json($response, 200);
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'token' => $token,
+                'user' => $user,
+                'supplier' => $user->hasRole(roles: 'admin') ? $user->userSupplier->supplier : null
+            ]
+        ], 200);
     }
 
     public function logout(Request $request)
