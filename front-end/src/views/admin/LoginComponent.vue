@@ -1,6 +1,6 @@
 <template>
     <NavBarComponent></NavBarComponent>
-    <v-container class="d-flex justify-center align-center" style="min-height: 80vh;">
+    <v-container class="d-flex justify-center align-center" style="min-height: 100vh;">
         <v-card elevation="2" class="pa-6" max-width="400" width="100%">
             <v-card-title class="justify-center">
                 Login
@@ -19,22 +19,18 @@
             </v-card-text>
         </v-card>
     </v-container>
-    <!-- <FooterComponent></FooterComponent> -->
+    <FooterComponent></FooterComponent>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import NavBarComponent from '@/components/NavBarComponent.vue'
 import LoginService from '@/services/LoginService'
+import FooterComponent from '@/components/FooterComponent.vue'
 
 interface LoginForm {
     email: string
     password: string
-}
-
-interface LoginResponse {
-    token: string
-    user: any
 }
 
 interface FormErrors {
@@ -45,7 +41,8 @@ interface FormErrors {
 export default defineComponent({
     name: 'LoginComponent',
     components: {
-        NavBarComponent
+        NavBarComponent,
+        FooterComponent
     },
     data() {
         return {
@@ -72,13 +69,9 @@ export default defineComponent({
             try {
                 const service = new LoginService()
                 const response = await service.login(this.form)
-                console.log(response);
                 if (response.success) {
-                    // Os dados já foram salvos no localStorage pelo serviço
-                    // Redirecionar para o painel administrativo
                     this.$router.push('/admin/dashboard')
                 } else {
-                    // Mostrar erro da API
                     console.error('Erro no login')
                 }
             } catch (error: any) {
