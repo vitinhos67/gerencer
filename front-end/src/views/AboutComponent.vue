@@ -1,4 +1,5 @@
 <template>
+  <NavBarComponent />
   <div class="about-page">
     <div class="about-content">
       <h1>Sobre o Gerencer</h1>
@@ -25,11 +26,13 @@
 
 <script>
 import FooterComponent from '../components/FooterComponent.vue'
+import NavBarComponent from '../components/NavBarComponent.vue'
 
 export default {
   name: 'AboutComponent',
   components: {
-    FooterComponent
+    FooterComponent,
+    NavBarComponent
   }
 }
 </script>

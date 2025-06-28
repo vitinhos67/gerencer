@@ -1,4 +1,5 @@
 <template>
+  <NavBarComponent />
   <div class="home-page">
     <div class="hero-section">
       <div class="hero-content">
@@ -36,11 +37,13 @@
 
 <script>
 import FooterComponent from '../components/FooterComponent.vue'
+import NavBarComponent from '../components/NavBarComponent.vue'
 
 export default {
   name: 'HomeComponent',
   components: {
-    FooterComponent
+    FooterComponent,
+    NavBarComponent
   }
 }
 </script>
