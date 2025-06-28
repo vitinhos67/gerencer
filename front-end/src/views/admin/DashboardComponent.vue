@@ -54,8 +54,6 @@
                 </div>
             </template>
         </v-navigation-drawer>
-
-        <!-- Barra superior -->
         <v-app-bar
             app
             color="white"
@@ -69,23 +67,11 @@
 
             <v-spacer></v-spacer>
 
-            <!-- Informações do usuário -->
-            <div class="d-flex align-center mr-4">
-                <v-avatar size="32" class="mr-2">
-                    <v-icon>mdi-account</v-icon>
-                </v-avatar>
-                <div>
-                    <div class="text-subtitle-2">{{ user?.name }}</div>
-                    <div class="text-caption text-grey">{{ userRole }}</div>
-                </div>
-            </div>
-
             <v-btn icon>
                 <v-icon>mdi-bell</v-icon>
             </v-btn>
         </v-app-bar>
 
-        <!-- Conteúdo principal -->
         <v-main>
             <v-container fluid class="pa-6">
                 <router-view></router-view>
