@@ -35,28 +35,15 @@
                 :loading="loading"
                 class="elevation-1"
             >
-                <template #item.actions="{ item }">
-                    <v-btn
-                        icon
-                        small
-                        color="primary"
-                        @click="editUser(item)"
-                    >
-                        <v-icon>mdi-pencil</v-icon>
-                    </v-btn>
-                    <v-btn
-                        icon
-                        small
-                        color="error"
-                        @click="deleteUser(item)"
-                    >
-                        <v-icon>mdi-delete</v-icon>
-                    </v-btn>
+                <template #item.actions="{ item }" >
+                    <div class="ma-2">
+                        <v-icon color="primary" @click="editUser(item)">mdi-pencil</v-icon>
+                        <v-icon color="error" @click="deleteUser(item)">mdi-delete</v-icon>
+                    </div>
                 </template>
             </v-data-table>
         </v-card>
 
-        <!-- Dialog para adicionar/editar usuário -->
         <v-dialog v-model="showAddDialog" max-width="500px">
             <v-card>
                 <v-card-title>

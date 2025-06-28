@@ -32,13 +32,11 @@
                     link
                     class="mb-2"
                 >
-                    <v-list-item-icon>
+                    <template #prepend>
                         <v-icon>{{ item.icon }}</v-icon>
-                    </v-list-item-icon>
+                    </template>
 
-                    <v-list-item-content>
-                        <v-list-item-title>{{ item.title }}</v-list-item-title>
-                    </v-list-item-content>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
 
@@ -77,8 +75,8 @@
                     <v-icon>mdi-account</v-icon>
                 </v-avatar>
                 <div>
-                    <div class="text-subtitle-2">{{ user?.name.toUpperCase() }}</div>
-                    <div class="text-caption text-grey">{{ userRole.toUpperCase() }}</div>
+                    <div class="text-subtitle-2">{{ user?.name }}</div>
+                    <div class="text-caption text-grey">{{ userRole }}</div>
                 </div>
             </div>
 
@@ -158,7 +156,6 @@ export default defineComponent({
                 this.$router.push('/login')
             } catch (error) {
                 console.error('Erro no logout:', error)
-
                 this.$router.push('/login')
             }
         }

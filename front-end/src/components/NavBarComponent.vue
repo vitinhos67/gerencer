@@ -78,22 +78,22 @@
             </template>
             <v-list>
               <v-list-item to="/admin/dashboard">
-                <v-list-item-icon>
+                <template #prepend>
                   <v-icon>mdi-view-dashboard</v-icon>
-                </v-list-item-icon>
+                </template>
                 <v-list-item-title>Painel Administrativo</v-list-item-title>
               </v-list-item>
               <v-list-item to="/admin/settings">
-                <v-list-item-icon>
+                <template #prepend>
                   <v-icon>mdi-cog</v-icon>
-                </v-list-item-icon>
+                </template>
                 <v-list-item-title>Configurações</v-list-item-title>
               </v-list-item>
               <v-divider></v-divider>
               <v-list-item @click="handleLogout">
-                <v-list-item-icon>
+                <template #prepend>
                   <v-icon>mdi-logout</v-icon>
-                </v-list-item-icon>
+                </template>
                 <v-list-item-title>Sair</v-list-item-title>
               </v-list-item>
             </v-list>
@@ -127,21 +127,21 @@
           <template v-if="isAuthenticated">
             <v-divider></v-divider>
             <v-list-item to="/admin/dashboard">
-              <v-list-item-icon>
+              <template #prepend>
                 <v-icon>mdi-view-dashboard</v-icon>
-              </v-list-item-icon>
+              </template>
               <v-list-item-title>Painel Administrativo</v-list-item-title>
             </v-list-item>
             <v-list-item to="/admin/settings">
-              <v-list-item-icon>
+              <template #prepend>
                 <v-icon>mdi-cog</v-icon>
-              </v-list-item-icon>
+              </template>
               <v-list-item-title>Configurações</v-list-item-title>
             </v-list-item>
             <v-list-item @click="handleLogout">
-              <v-list-item-icon>
+              <template #prepend>
                 <v-icon>mdi-logout</v-icon>
-              </v-list-item-icon>
+              </template>
               <v-list-item-title>Sair</v-list-item-title>
             </v-list-item>
           </template>
@@ -150,9 +150,9 @@
           <template v-else>
             <v-divider></v-divider>
             <v-list-item to="/login">
-              <v-list-item-icon>
+              <template #prepend>
                 <v-icon>mdi-login</v-icon>
-              </v-list-item-icon>
+              </template>
               <v-list-item-title>Login</v-list-item-title>
             </v-list-item>
           </template>
