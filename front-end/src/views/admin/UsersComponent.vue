@@ -1,4 +1,3 @@
-
 <template>
     <div>
         <v-row>
@@ -35,6 +34,23 @@
                 :loading="loading"
                 class="elevation-1"
             >
+                <template #item.roles="{ item }">
+                    <div v-if="item.roles && item.roles.length > 0">
+                        <v-chip
+                            v-for="role in item.roles"
+                            :key="role.id"
+                            color="primary"
+                            small
+                            class="mr-1 mb-1"
+                        >
+                            {{ role.name }}
+                        </v-chip>
+                    </div>
+                    <span v-else>-</span>
+                </template>
+                <template #item.created_at="{ item }">
+                    {{ item.created_at ? new Date(item.created_at).toLocaleDateString('pt-BR') : '-' }}
+                </template>
                 <template #item.actions="{ item }" >
                     <div class="ma-2">
                         <v-icon color="primary" @click="editUser(item)">mdi-pencil</v-icon>
@@ -99,22 +115,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-
-interface User {
-    id: number
-    name: string
-    email: string
-    role: string
-    status: string
-    createdAt: string
-}
-
-interface UserForm {
-    name: string
-    email: string
-    password: string
-    role: string
-}
+import type { User, UserForm } from '@/types/user'
+const UserService = new (await import('@/services/UserService')).default()
 
 export default defineComponent({
     name: 'UsersComponent',
@@ -130,33 +132,15 @@ export default defineComponent({
                 password: '',
                 role: ''
             } as UserForm,
-            roles: ['Admin', 'Usuário', 'Editor'],
+            roles: ['admin', 'usuário', 'editor'],
             headers: [
                 { text: 'Nome', value: 'name' },
                 { text: 'Email', value: 'email' },
-                { text: 'Perfil', value: 'role' },
-                { text: 'Status', value: 'status' },
-                { text: 'Data de Criação', value: 'createdAt' },
+                { text: 'Perfis', value: 'roles', sortable: false },
+                { text: 'Data de Criação', value: 'created_at' },
                 { text: 'Ações', value: 'actions', sortable: false }
             ],
-            users: [
-                {
-                    id: 1,
-                    name: 'João Silva',
-                    email: 'joao@example.com',
-                    role: 'Admin',
-                    status: 'Ativo',
-                    createdAt: '2024-01-15'
-                },
-                {
-                    id: 2,
-                    name: 'Maria Santos',
-                    email: 'maria@example.com',
-                    role: 'Usuário',
-                    status: 'Ativo',
-                    createdAt: '2024-01-20'
-                }
-            ] as User[]
+            users: [] as User[]
         }
     },
     methods: {
@@ -166,17 +150,14 @@ export default defineComponent({
                 name: user.name,
                 email: user.email,
                 password: '',
-                role: user.role
+                role: user.roles.length > 0 ? user.roles[0].name : ''
             }
             this.showAddDialog = true
         },
         deleteUser(user: User) {
             // Implementar lógica de exclusão
-            console.log('Deletar usuário:', user)
         },
         saveUser() {
-            // Implementar lógica de salvamento
-            console.log('Salvar usuário:', this.userForm)
             this.showAddDialog = false
             this.editingUser = null
             this.userForm = {
@@ -185,6 +166,20 @@ export default defineComponent({
                 password: '',
                 role: ''
             }
+        }
+    },
+    async mounted() {
+        this.loading = true
+       
+        try {
+            const users = await UserService.getWithParam('all');
+            console.log('API Response:', users);
+            console.log('Users data:', users.data);
+            this.users = users.data;
+            this.loading = false;
+        } catch (error) {
+            console.error('Erro ao carregar usuários:', error);
+            this.loading = false;
         }
     }
 })

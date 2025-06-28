@@ -73,7 +73,7 @@ class UserController extends Controller
             $query->select('roles.id', 'name', 'guard_name');
         }])->get();
         
-        return response()->json($users, 200);
+        return response()->json(['success' => true, 'data' => $users], 200);
     }
 
 }

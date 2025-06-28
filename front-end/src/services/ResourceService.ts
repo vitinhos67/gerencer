@@ -38,17 +38,17 @@ class ResourceService<T> {
             (config) => {
                 const authMethod = localStorage.getItem('auth_method');
                 const token = localStorage.getItem('token');
-                
+
                 // Se estiver usando tokens, adicionar o header Authorization
                 if (authMethod === 'token' && token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
-                
+
                 // Para cookies, garantir que withCredentials está habilitado
                 if (authMethod === 'cookies') {
                     config.withCredentials = true;
                 }
-                
+
                 return config;
             },
             (error) => {
@@ -67,7 +67,7 @@ class ResourceService<T> {
                     localStorage.removeItem('token');
                     localStorage.removeItem('user');
                     localStorage.removeItem('auth_method');
-                    
+
                     // Redirecionar para login se não estiver na página de login
                     if (window.location.pathname !== '/login') {
                         window.location.href = '/login';
@@ -80,6 +80,11 @@ class ResourceService<T> {
 
     async get(id: string | number): Promise<ApiResponse<T>> {
         const response: AxiosResponse<ApiResponse<T>> = await this.http.get(`/${this.resource}/${id}`);
+        return response.data;
+    }
+
+    async getWithParam(param: string): Promise<ApiResponse<T>> {
+        const response: AxiosResponse<ApiResponse<T>> = await this.http.get(`/${this.resource}/${param}`);
         return response.data;
     }
 
