@@ -7,13 +7,11 @@
     class="navbar"
   >
     <v-container class="d-flex align-center justify-space-between px-0">
-      <!-- Logo ou Título -->
       <div class="d-flex align-center">
         <v-icon color="#ff6b35" size="32">mdi-storefront</v-icon>
         <span class="navbar-title ml-2" @click="goHome">Gerencer</span>
       </div>
 
-      <!-- Links principais (desktop) -->
       <div class="d-none d-md-flex align-center gap-3">
         <v-menu offset-y>
           <template #activator="{ props }">
@@ -48,10 +46,7 @@
           </v-list>
         </v-menu>
       </div>
-
-      <!-- Botões de ação (desktop) -->
       <div class="d-none d-md-flex align-center gap-2 navbar-actions">
-        <!-- Usuário NÃO logado -->
         <template v-if="!isAuthenticated">
           <v-btn
             class="franqueado-btn"
@@ -62,10 +57,7 @@
           </v-btn>
           <v-btn to="/login" color="primary" variant="outlined">Login</v-btn>
         </template>
-
-        <!-- Usuário logado -->
         <template v-else>
-          <!-- Menu do usuário -->
           <v-menu offset-y>
             <template #activator="{ props }">
               <v-btn variant="text" v-bind="props" class="user-menu-btn">
@@ -106,6 +98,7 @@
         class="d-md-none"
         offset-y
         left
+        v-if="isMobile"
       >
         <template #activator="{ props }">
           <v-btn icon v-bind="props">
@@ -163,7 +156,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, onMounted, onUnmounted, computed } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 
 export default defineComponent({
@@ -178,20 +171,34 @@ export default defineComponent({
     const handleLogout = async () => {
       try {
         await logout()
-        // Redirecionar para home após logout
         window.location.href = '/'
       } catch (error) {
         console.error('Erro no logout:', error)
-        // Mesmo com erro, redirecionar
         window.location.href = '/'
       }
     }
+
+    const windowWidth = ref(window.innerWidth)
+    const onResize = () => {
+      windowWidth.value = window.innerWidth
+    }
+
+    onMounted(() => {
+      window.addEventListener('resize', onResize)
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', onResize)
+    })
+
+    const isMobile = computed(() => windowWidth.value < 960)
 
     return {
       user,
       isAuthenticated,
       goHome,
-      handleLogout
+      handleLogout,
+      isMobile
     }
   }
 })
