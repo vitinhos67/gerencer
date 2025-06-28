@@ -1,6 +1,8 @@
 <?php
 
-use App\Middleware\ForceJsonResponse;
+use App\Http\Controllers\AuthController;
+use App\Http\Middleware\ForceJsonResponse;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -20,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->prependToGroup('api', [
             ForceJsonResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
             'auth:sanctum'
         ]);
 
@@ -27,6 +31,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
+        ]);
+
+        // Configurar middleware CSRF
+        $middleware->use([
+            \App\Http\Middleware\VerifyCsrfToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

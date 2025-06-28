@@ -43,15 +43,15 @@ const router = createRouter({
   routes,
 })
 
-// Guarda de rota para verificar autenticação
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem('token')
+  const authMethod = localStorage.getItem('auth_method')
   
-  if (to.meta.requiresAuth && !token) {
-    // Redirecionar para login se não estiver autenticado
+  const isAuthenticated = token || authMethod === 'cookies'
+  
+  if (to.meta.requiresAuth && !isAuthenticated) {
     next('/login')
-  } else if (to.path === '/login' && token) {
-    // Redirecionar para dashboard se já estiver autenticado
+  } else if (to.path === '/login' && isAuthenticated) {
     next('/admin/dashboard')
   } else {
     next()
