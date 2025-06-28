@@ -16,7 +16,7 @@ export interface PaginatedResponse<T> {
 }
 
 class ResourceService<T> {
-    private resource: string;
+    protected resource: string;
     protected http: AxiosInstance;
 
     constructor(resource: string) {
@@ -25,8 +25,57 @@ class ResourceService<T> {
             baseURL: (process.env as any).VUE_APP_API_URL || 'http://localhost:8000/api',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            withCredentials: true // Habilitar cookies por padrão
         });
+
+        this.setupInterceptors();
+    }
+
+    private setupInterceptors(): void {
+        // Interceptor para adicionar token Bearer quando necessário
+        this.http.interceptors.request.use(
+            (config) => {
+                const authMethod = localStorage.getItem('auth_method');
+                const token = localStorage.getItem('token');
+                
+                // Se estiver usando tokens, adicionar o header Authorization
+                if (authMethod === 'token' && token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+                
+                // Para cookies, garantir que withCredentials está habilitado
+                if (authMethod === 'cookies') {
+                    config.withCredentials = true;
+                }
+                
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
+
+        // Interceptor para tratar erros de autenticação
+        this.http.interceptors.response.use(
+            (response) => {
+                return response;
+            },
+            (error) => {
+                if (error.response?.status === 401) {
+                    // Token expirado ou inválido
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('auth_method');
+                    
+                    // Redirecionar para login se não estiver na página de login
+                    if (window.location.pathname !== '/login') {
+                        window.location.href = '/login';
+                    }
+                }
+                return Promise.reject(error);
+            }
+        );
     }
 
     async get(id: string | number): Promise<ApiResponse<T>> {

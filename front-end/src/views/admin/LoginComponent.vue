@@ -71,21 +71,21 @@ export default defineComponent({
 
             try {
                 const service = new LoginService()
-                const response = await service.create(this.form)
+                const response = await service.login(this.form)
                 console.log(response);
                 if (response.success) {
-                    // Salvar token e dados do usuário
-                    localStorage.setItem('token', response?.data.token || '')
-                    localStorage.setItem('user', JSON.stringify(response?.data.user || {}))
-
+                    // Os dados já foram salvos no localStorage pelo serviço
                     // Redirecionar para o painel administrativo
                     this.$router.push('/admin/dashboard')
                 } else {
                     // Mostrar erro da API
-                    console.error('Erro no login:', response.message)
+                    console.error('Erro no login')
                 }
             } catch (error: any) {
                 console.log(error);
+                // Mostrar erro genérico para o usuário
+                this.errors.email = 'Credenciais inválidas'
+                this.errors.password = 'Credenciais inválidas'
             } finally {
                 this.loading = false
             }

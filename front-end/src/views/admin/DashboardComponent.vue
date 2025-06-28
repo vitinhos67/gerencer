@@ -90,6 +90,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import LoginService from '@/services/LoginService'
 
 interface MenuItem {
     title: string
@@ -133,13 +134,21 @@ export default defineComponent({
         }
     },
     methods: {
-        handleLogout() {
-            // Limpar dados de autenticação
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
+        async handleLogout() {
+            try {
+                const service = new LoginService()
+                await service.logout()
             
             // Redirecionar para login
             this.$router.push('/login')
+            } catch (error) {
+                console.error('Erro no logout:', error)
+                // Mesmo com erro, limpar dados locais e redirecionar
+                localStorage.removeItem('token')
+                localStorage.removeItem('user')
+                localStorage.removeItem('auth_method')
+                this.$router.push('/login')
+            }
         }
     }
 })
