@@ -23,4 +23,9 @@ class UserSupplier extends Model
         return $this->belongsTo(Suppliers::class, 'supplier_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User\User', 'user_id');
+    }
+
 }

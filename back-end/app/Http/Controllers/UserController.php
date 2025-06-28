@@ -62,4 +62,18 @@ class UserController extends Controller
         $success['token'] = $user->createToken('user')->plainTextToken;
         return response()->json($success, 201);
     }
+
+    public function all(Request $request)
+    {
+        $supplierId = data_get($request->user()->userSupplier()->first(), 'supplier_id') ?? null;
+        
+        $users = User::whereHas('userSupplier', function($query) use ($supplierId) {
+            $query->where('supplier_id', $supplierId);
+        })->with(['roles' => function($query) {
+            $query->select('roles.id', 'name', 'guard_name');
+        }])->get();
+        
+        return response()->json($users, 200);
+    }
+
 }

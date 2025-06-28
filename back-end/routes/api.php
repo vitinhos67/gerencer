@@ -46,6 +46,7 @@ Route::middleware(['role:moderador|admin'])->group(function () {
 
     Route::prefix('user')->group(function () {
         Route::get('/', [UserController::class, 'get']);
+        Route::get('/all', [UserController::class, 'all']);
         Route::post('/', [UserController::class, 'createModerator']);
     });
 });
