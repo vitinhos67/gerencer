@@ -37,7 +37,6 @@ class AuthController extends Controller
                 'data' => [
                     'user' => $user,
                     'supplier' => $user->hasRole(roles: 'admin') ? $user->userSupplier->supplier : null,
-                    'message' => 'Login realizado com cookies HTTP-only'
                 ]
             ], 200)->withCookie(
                 'laravel_session',
