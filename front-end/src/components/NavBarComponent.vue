@@ -1,8 +1,7 @@
-
 <template>
   <v-app-bar
-    color="#fafafa"
-    elevate-on-scroll
+    color="#f5f5f7"
+    height="80"
     flat
     app
     class="navbar"
@@ -15,19 +14,51 @@
       </div>
 
       <!-- Links principais (desktop) -->
-      <div class="d-none d-md-flex align-center gap-4">
-        <v-btn variant="text" to="/">Home</v-btn>
-        <v-btn variant="text" to="/about">Sobre</v-btn>
-        <v-btn variant="text" to="/contato">Contato</v-btn>
+      <div class="d-none d-md-flex align-center gap-3">
+        <v-menu offset-y>
+          <template #activator="{ props }">
+            <v-btn variant="text" v-bind="props">
+              Sobre
+              <v-icon right>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item to="/about">
+              <v-list-item-title>Quem somos</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title>Nossa missão</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+        <v-menu offset-y>
+          <template #activator="{ props }">
+            <v-btn variant="text" v-bind="props">
+              Contato
+              <v-icon right>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item>
+              <v-list-item-title>Email</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title>Telefone</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+
+      <!-- Botões de ação (desktop) -->
+      <div class="d-none d-md-flex align-center gap-2 navbar-actions">
         <v-btn
-          class="ml-2 franqueado-btn"
+          class="franqueado-btn"
           color="orange"
-          variant="elevated"
-          style="font-weight: bold;"
+          variant="flat"
         >
           Seja um franqueado
         </v-btn>
-        <v-btn class="ml-2" color="primary" variant="outlined">Login</v-btn>
+        <v-btn color="primary" variant="outlined">Login</v-btn>
       </div>
 
       <!-- Menu hamburguer (mobile) -->
@@ -52,7 +83,7 @@
             <v-list-item-title>Contato</v-list-item-title>
           </v-list-item>
           <v-list-item>
-            <v-btn block color="orange" class="franqueado-btn">Seja um franqueado</v-btn>
+            <v-btn block color="orange" class="franqueado-btn" variant="flat">Seja um franqueado</v-btn>
           </v-list-item>
           <v-list-item>
             <v-btn block color="primary" variant="outlined">Login</v-btn>
@@ -71,27 +102,37 @@ export default {
 
 <style scoped>
 .navbar {
-  background: #fafafa !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  background: #f5f5f7 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+  min-height: 80px;
 }
 
 .navbar-title {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 1px;
   color: #222;
 }
 
-.franqueado-btn {
-  background: linear-gradient(90deg, #ff6b35 0%, #f7931e 100%) !important;
-  color: #fff !important;
-  box-shadow: 0 2px 8px rgba(255,107,53,0.08);
-  border-radius: 8px;
-  text-transform: none;
+.gap-3 > * + * {
+  margin-left: 1.2rem;
+}
+.gap-2 > * + * {
+  margin-left: 0.7rem;
 }
 
-.gap-4 > * + * {
-  margin-left: 1.5rem;
+.navbar-actions {
+  margin-left: 2rem;
+}
+
+.franqueado-btn {
+  background: #ff6b35 !important;
+  color: #fff !important;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  box-shadow: none !important;
 }
 
 @media (max-width: 960px) {
