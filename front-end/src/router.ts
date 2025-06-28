@@ -43,19 +43,30 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('token')
-  const authMethod = localStorage.getItem('auth_method')
+// Guarda de rota para verificar autenticação
+router.beforeEach(async (to, from, next) => {
+  // Importar o composable dinamicamente para evitar problemas de inicialização
+  const { useAuth } = await import('./composables/useAuth')
+  const { isAuthenticated, checkAuth } = useAuth()
   
-  const isAuthenticated = token || authMethod === 'cookies'
-  
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login')
-  } else if (to.path === '/login' && isAuthenticated) {
-    next('/admin/dashboard')
-  } else {
-    next()
+  if (to.meta.requiresAuth) {
+    // Se não estiver autenticado, tentar verificar com o servidor
+    if (!isAuthenticated.value) {
+      const authenticated = await checkAuth()
+      if (!authenticated) {
+        next('/login')
+        return
+      }
+    }
   }
+  
+  // Se estiver na página de login e já autenticado, redirecionar
+  if (to.path === '/login' && isAuthenticated.value) {
+    next('/admin/dashboard')
+    return
+  }
+  
+  next()
 })
 
 export default router 

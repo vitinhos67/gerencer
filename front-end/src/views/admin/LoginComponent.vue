@@ -1,6 +1,6 @@
 <template>
     <NavBarComponent></NavBarComponent>
-    <v-container class="d-flex justify-center align-center" style="min-height: 100vh;">
+    <v-container class="d-flex justify-center align-center" style="min-height: 80vh;">
         <v-card elevation="2" class="pa-6" max-width="400" width="100%">
             <v-card-title class="justify-center">
                 Login
@@ -19,14 +19,12 @@
             </v-card-text>
         </v-card>
     </v-container>
-    <FooterComponent></FooterComponent>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import NavBarComponent from '@/components/NavBarComponent.vue'
-import LoginService from '@/services/LoginService'
-import FooterComponent from '@/components/FooterComponent.vue'
+import { useAuth } from '@/composables/useAuth'
 
 interface LoginForm {
     email: string
@@ -41,8 +39,15 @@ interface FormErrors {
 export default defineComponent({
     name: 'LoginComponent',
     components: {
-        NavBarComponent,
-        FooterComponent
+        NavBarComponent
+    },
+    setup() {
+        const { login, loading } = useAuth()
+
+        return {
+            login,
+            loading
+        }
     },
     data() {
         return {
@@ -53,8 +58,7 @@ export default defineComponent({
             errors: {
                 email: '',
                 password: ''
-            } as FormErrors,
-            loading: false
+            } as FormErrors
         }
     },
     methods: {
@@ -63,24 +67,23 @@ export default defineComponent({
                 return
             }
 
-            this.loading = true
             this.clearErrors()
 
             try {
-                const service = new LoginService()
-                const response = await service.login(this.form)
-                if (response.success) {
+                const result = await this.login(this.form)
+                
+                if (result.success) {
+                    // Redirecionar para o painel administrativo
                     this.$router.push('/admin/dashboard')
                 } else {
-                    console.error('Erro no login')
+                    // Mostrar erro
+                    this.errors.email = result.message || 'Credenciais inválidas'
+                    this.errors.password = result.message || 'Credenciais inválidas'
                 }
             } catch (error: any) {
-                console.log(error);
-                // Mostrar erro genérico para o usuário
-                this.errors.email = 'Credenciais inválidas'
-                this.errors.password = 'Credenciais inválidas'
-            } finally {
-                this.loading = false
+                console.error('Erro no login:', error)
+                this.errors.email = 'Erro ao fazer login'
+                this.errors.password = 'Erro ao fazer login'
             }
         },
 

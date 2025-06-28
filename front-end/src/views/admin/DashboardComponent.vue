@@ -48,6 +48,7 @@
                         block
                         color="error"
                         @click="handleLogout"
+                        :loading="loading"
                     >
                         <v-icon left>mdi-logout</v-icon>
                         Sair
@@ -70,12 +71,19 @@
 
             <v-spacer></v-spacer>
 
-            <v-btn icon>
-                <v-icon>mdi-bell</v-icon>
-            </v-btn>
+            <!-- Informações do usuário -->
+            <div class="d-flex align-center mr-4">
+                <v-avatar size="32" class="mr-2">
+                    <v-icon>mdi-account</v-icon>
+                </v-avatar>
+                <div>
+                    <div class="text-subtitle-2">{{ user?.name.toUpperCase() }}</div>
+                    <div class="text-caption text-grey">{{ userRole.toUpperCase() }}</div>
+                </div>
+            </div>
 
             <v-btn icon>
-                <v-icon>mdi-account</v-icon>
+                <v-icon>mdi-bell</v-icon>
             </v-btn>
         </v-app-bar>
 
@@ -90,7 +98,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import LoginService from '@/services/LoginService'
+import { useAuth } from '@/composables/useAuth'
 
 interface MenuItem {
     title: string
@@ -100,6 +108,16 @@ interface MenuItem {
 
 export default defineComponent({
     name: 'DashboardComponent',
+    setup() {
+        const { user, userRole, logout, loading } = useAuth()
+
+        return {
+            user,
+            userRole,
+            logout,
+            loading
+        }
+    },
     data() {
         return {
             drawer: true,
@@ -136,17 +154,11 @@ export default defineComponent({
     methods: {
         async handleLogout() {
             try {
-                const service = new LoginService()
-                await service.logout()
-            
-            // Redirecionar para login
-            this.$router.push('/login')
+                await this.logout()
+                this.$router.push('/login')
             } catch (error) {
                 console.error('Erro no logout:', error)
-                // Mesmo com erro, limpar dados locais e redirecionar
-                localStorage.removeItem('token')
-                localStorage.removeItem('user')
-                localStorage.removeItem('auth_method')
+
                 this.$router.push('/login')
             }
         }

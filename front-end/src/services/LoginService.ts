@@ -45,13 +45,16 @@ class LoginService extends ResourceService<Login> {
             
             return data;
         } catch (error: any) {
+            console.warn('Login com cookies falhou, tentando com token:', error.message);
             return {
                 success: false,
                 data: {
-                    message: error?.response?.data?.message || 'Erro ao fazer login.',
-                    user: null
+                    token: undefined,
+                    user: undefined,
+                    supplier: undefined,
+                    message: undefined
                 }
-            };
+            }
         }
     }
 
@@ -92,6 +95,47 @@ class LoginService extends ResourceService<Login> {
             console.error('Erro ao obter usuário atual:', error);
             throw error;
         }
+    }
+
+    isAuthenticated(): boolean {
+        const token = localStorage.getItem('token');
+        const authMethod = localStorage.getItem('auth_method');
+        const user = localStorage.getItem('user');
+        
+        return !!(token || (authMethod === 'cookies' && user));
+    }
+
+    getCurrentUserFromStorage(): any {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            try {
+                return JSON.parse(userStr);
+            } catch (error) {
+                console.error('Erro ao parsear usuário do localStorage:', error);
+                return null;
+            }
+        }
+        return null;
+    }
+
+    getAuthMethod(): string | null {
+        return localStorage.getItem('auth_method');
+    }
+
+    hasRole(role: string): boolean {
+        const user = this.getCurrentUserFromStorage();
+        if (user && user.roles) {
+            return user.roles.some((userRole: any) => userRole.name === role);
+        }
+        return false;
+    }
+
+    hasPermission(permission: string): boolean {
+        const user = this.getCurrentUserFromStorage();
+        if (user && user.permissions) {
+            return user.permissions.some((userPermission: any) => userPermission.name === permission);
+        }
+        return false;
     }
 }
 
