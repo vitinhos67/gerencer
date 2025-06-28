@@ -35,17 +35,18 @@
   </div>
 </template>
 
-<script>
-import FooterComponent from '../components/FooterComponent.vue'
-import NavBarComponent from '../components/NavBarComponent.vue'
+<script lang="ts">
+import { defineComponent } from 'vue'
+import FooterComponent from '../../components/FooterComponent.vue'
+import NavBarComponent from '../../components/NavBarComponent.vue'
 
-export default {
+export default defineComponent({
   name: 'HomeComponent',
   components: {
     FooterComponent,
     NavBarComponent
   }
-}
+})
 </script>
 
 <style scoped>

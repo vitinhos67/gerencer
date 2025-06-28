@@ -10,7 +10,7 @@
       <!-- Logo ou Título -->
       <div class="d-flex align-center">
         <v-icon color="#ff6b35" size="32">mdi-storefront</v-icon>
-        <span class="navbar-title ml-2">Gerencer</span>
+        <span class="navbar-title ml-2" onclick="window.location.href='/'">Gerencer</span>
       </div>
 
       <!-- Links principais (desktop) -->
@@ -58,7 +58,7 @@
         >
           Seja um franqueado
         </v-btn>
-        <v-btn color="primary" variant="outlined">Login</v-btn>
+        <v-btn to="/login" color="primary" variant="outlined">Login</v-btn>
       </div>
 
       <!-- Menu hamburguer (mobile) -->
@@ -82,27 +82,23 @@
           <v-list-item to="/contato">
             <v-list-item-title>Contato</v-list-item-title>
           </v-list-item>
-          <v-list-item>
-            <v-btn block color="orange" class="franqueado-btn" variant="flat">Seja um franqueado</v-btn>
-          </v-list-item>
-          <v-list-item>
-            <v-btn block color="primary" variant="outlined">Login</v-btn>
-          </v-list-item>
         </v-list>
       </v-menu>
     </v-container>
   </v-app-bar>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
   name: 'NavBarComponent',
-}
+})
 </script>
 
 <style scoped>
 .navbar {
-  background: #f5f5f7 !important;
+  background: #ffffff !important;
   box-shadow: 0 1px 4px rgba(0,0,0,0.02);
   min-height: 80px;
 }
