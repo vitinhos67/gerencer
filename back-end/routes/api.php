@@ -28,6 +28,7 @@ Route::middleware(['role:admin'])->group(function () {
     Route::post('/printer', [PrinterController::class, 'configPrinter']);
     Route::get('/printer', [PrinterController::class, 'get']);
 });
+
 Route::middleware(['role:moderador|admin'])->group(function () {
     Route::prefix('supplier')->group(function () {
         Route::get('/', [SuppliersController::class, 'get']);
@@ -54,6 +55,7 @@ Route::middleware(['role:moderador|admin'])->group(function () {
 Route::middleware(['role:user|moderador|admin'])->group(function () {
     Route::prefix('order')->group(function () {
         Route::post('/', [OrderController::class, 'create']);
+        Route::get('/', [OrderController::class, 'getProducts']);
         Route::post('/payment', [PaymentController::class, 'create']);
     });
 });

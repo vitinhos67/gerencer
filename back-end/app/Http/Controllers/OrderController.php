@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateOrderRequest;
+use App\Models\Orders\Order;
 use App\Services\Order\OrderService;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -22,4 +24,12 @@ class OrderController extends Controller
         return response()->json($order, 201);
     }
 
+    public function getProducts(Request $request)
+    {
+        $orders  = Order::where('supplier_id', $request->user()->userSupplier()->first()->supplier_id)->get();
+        return response()->json([
+            'success' => true,
+            'data' => $orders
+        ]);
+    }
 }
